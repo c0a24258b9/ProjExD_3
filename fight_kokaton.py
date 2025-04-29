@@ -8,6 +8,7 @@ import pygame as pg
 WIDTH = 1100  # ゲームウィンドウの幅
 HEIGHT = 650  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5  #爆弾の数
+# HIT_BOMB = 0
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -140,14 +141,31 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+class Score:
+    """
+    スコア表示のクラス
+    """
+    def __init__(self):
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.score = 0
+        self.img = self.fonto.render(f"スコア：{self.score}", True, (0, 0, 255))
+        self.rct = self.img.get_rect()
+        self.rct.center = (100, 600)
+
+    def update(self, screen: pg.Surface):
+        # self.score += 1
+        self.img = self.fonto.render(f"スコア：{self.score}", True, (0, 0, 255))
+        screen.blit(self.img, self.rct)
+        
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
+    score = Score()
     beam = None
-    # bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     clock = pg.time.Clock()
 
@@ -182,8 +200,11 @@ def main():
                     beam = None  #ビーム消す
                     bombs[j] = None  #爆弾消す
                     bird.change_img(6, screen)  #よろこぶこうかとん
+                    score.score += 1  #当てるたびにスコア1点
             bombs = [bomb for bomb in bombs if bomb is not None]  #撃ち落されてない爆弾だけのリスト
 
+        
+        score.update(screen)
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
         if beam is not None:
