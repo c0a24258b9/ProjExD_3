@@ -146,6 +146,9 @@ class Score:
     スコア表示のクラス
     """
     def __init__(self):
+        """
+        フォント、座標の設定
+        """
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
         self.score = 0
         self.img = self.fonto.render(f"スコア：{self.score}", True, (0, 0, 255))
@@ -153,6 +156,9 @@ class Score:
         self.rct.center = (100, 600)
 
     def update(self, screen: pg.Surface):
+        """
+        画面にスコアを表示
+        """
         # self.score += 1
         self.img = self.fonto.render(f"スコア：{self.score}", True, (0, 0, 255))
         screen.blit(self.img, self.rct)
